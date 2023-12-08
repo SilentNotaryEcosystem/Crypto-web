@@ -2,7 +2,7 @@
 //const argon2 = require('argon2');
 //const {argon2d} = argon2
 
-const myBuffer = require('buffer/').Buffer;
+const Buffer = require('buffer/').Buffer;
 const crypto = require('crypto-js');
 const scrypt = require('scrypt-js');
 const elliptic = require('elliptic');
@@ -240,11 +240,11 @@ class CryptoLib {
      */
     static scrypt(password, salt, hashLength = 32, options = SCRYPT_OPTIONS) {
         const {N, r, p} = options;
-        const buffPass = typeof password === 'string' ? new myBuffer(password) : password;
-        const buffSalt = typeof salt === 'string' ? new myBuffer(salt, 'hex') : salt;
+        const buffPass = typeof password === 'string' ? new Buffer(password) : password;
+        const buffSalt = typeof salt === 'string' ? new Buffer(salt, 'hex') : salt;
 
         const result = scrypt.syncScrypt(buffPass, buffSalt, N, r, p, hashLength);
-        return new myBuffer(result).toString('hex');
+        return new Buffer(result).toString('hex');
     }
 
     /**
@@ -298,7 +298,7 @@ class CryptoLib {
      */
     static decrypt(password, objEncryptedData) {
         let {iv, encrypted, salt, hashOptions, keyAlgo} = objEncryptedData;
-        salt = !salt || new myBuffer(salt, 'hex');
+        salt = !salt || new Buffer(salt, 'hex');
 
         const {key} = this.createKey(
             keyAlgo,
